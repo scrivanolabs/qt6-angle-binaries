@@ -1,0 +1,32 @@
+name: Build Qt 6 Angle
+on: 
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Setup MSVC Developer CMD
+        uses: seanmiddleditch/gha-setup-vsdevenv@master
+
+      - name: Install EGL from vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git
+          cd vcpkg
+          ./bootstrap-vcpkg.bat
+          ./vcpkg install egl:x64-windows
+
+      - name: Install Qt
+        run: |
+          git clone https://invent.kde.org/dkazakov/qt5 -b kazakov/for-krita/6.8.0
+          cd qt5
+          ./init-repository --module-subset="qtbase;qtdeclarative;qtshadertools;qtsvg;qt5compat"
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_SUBMODULES="qtbase;qtdeclarative;qtshadertools;qtsvg;qt5compat" -DFEATURE_egl=ON -DFEATURE_opengl=ON -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake
+          cmake --build build
+          cmake --install build --prefix ${{github.workspace}}/qt6
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: qt6-angle
+          path: qt6
