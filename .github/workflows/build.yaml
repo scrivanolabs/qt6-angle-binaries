@@ -40,7 +40,7 @@ jobs:
           git clone https://invent.kde.org/dkazakov/qt5 -b kazakov/for-krita/6.8.0
           cd qt5
           .\init-repository --module-subset=qtbase,qtdeclarative,qtshadertools,qtsvg,qt5compat
-          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang-cl -DCMAKE_CXX_COMPILER=clang-cl -DQT_QMAKE_TARGET_MKSPEC=win32-clang-msvc -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES=OFF -DFEATURE_egl=ON -DFEATURE_opengl=ON -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang-cl -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_CXX_FLAGS="/arch:AVX /FI'smmintrin.h'" -DQT_QMAKE_TARGET_MKSPEC=win32-clang-msvc -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES=OFF -DFEATURE_egl=ON -DFEATURE_opengl=ON -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
           cmake --build build
           cmake --install build --prefix ${{ github.workspace }}/qt6
 
