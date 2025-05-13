@@ -33,12 +33,11 @@ jobs:
           vcpkg\vcpkg.exe install egl:x64-windows
 
       - name: Install Qt
-        shell: cmd
         run: |
           git clone https://invent.kde.org/dkazakov/qt5 -b kazakov/for-krita/6.8.0
           cd qt5
-          .\init-repository.bat
-          cmake -B build \
+          mkdir build && cd build
+          ..\configure.bat -- \
             -DCMAKE_BUILD_TYPE=Release \
             -DQT_BUILD_TESTS=OFF \
             -DQT_BUILD_EXAMPLES=OFF \
