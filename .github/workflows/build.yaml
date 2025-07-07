@@ -46,13 +46,8 @@ jobs:
         run: |
           cd qt5
           patch -p0 << 'EOF'
-          *** Begin Patch
-          *** Update File: qtbase/src/plugins/platforms/windows/qwindowseglcontext.cpp
-          @@ #else // EGL_ANGLE_platform_angle
-          -#   warning "Building QWindowsEGLStaticContext without ANGLE is not officially supported"
-          +    /* warning removed: MSVC does not support this directive */
-          *** End Patch
-          EOF
+          sed -i 's@^#\s*warning "Building QWindowsEGLStaticContext without ANGLE is not officially supported"@    /* warning removed: MSVC does not support this directive */@' \
+           qtbase/src/plugins/platforms/windows/qwindowseglcontext.cpp
 
       - name: Install Qt
         run: |
