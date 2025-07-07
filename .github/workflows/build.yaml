@@ -36,11 +36,27 @@ jobs:
         run: |
           vcpkg\vcpkg.exe install egl:x64-windows
 
-      - name: Install Qt
+      - name: Clone Qt 6-for-Angle branch
         run: |
-          git clone https://invent.kde.org/dkazakov/qt5 -b kazakov/for-krita/6.8.0
+          git clone https://invent.kde.org/dkazakov/qt5 -b kazakov/for-krita/6.8.0 qt5
           cd qt5
           git cherry-pick 1ac0cfaa2631a639768199fb18a0e0fd9163ac6d
+          
+      - name: Remove MSVC-incompatible `#warning`
+        shell: bash
+        run: |
+          cd qt5
+          patch -p0 << 'EOF'
+          *** Begin Patch
+          *** Update File: qtbase/src/plugins/platforms/windows/qwindowseglcontext.cpp
+          @@ #else // EGL_ANGLE_platform_angle
+          -#   warning "Building QWindowsEGLStaticContext without ANGLE is not officially supported"
+          +    /* warning removed: MSVC does not support this directive */
+          *** End Patch
+          EOF
+
+      - name: Install Qt
+        run: |
           .\init-repository --module-subset=qtbase,qtdeclarative,qtshadertools,qtsvg,qt5compat
           cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="/arch:AVX2" -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES=OFF -DFEATURE_egl=ON -DFEATURE_opengl=ON -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
           cmake --build build
