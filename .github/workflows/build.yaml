@@ -40,7 +40,6 @@ jobs:
         run: |
           git clone https://invent.kde.org/dkazakov/qt5 -b kazakov/for-krita/6.8.0 qt5
           cd qt5
-          git cherry-pick 1ac0cfaa2631a639768199fb18a0e0fd9163ac6d
           
       - name: Remove MSVC-incompatible `#warning`
         shell: bash
