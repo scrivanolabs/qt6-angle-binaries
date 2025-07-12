@@ -55,6 +55,7 @@ jobs:
               
       - name: Build and install Qt
         run: |
+          cd qt5
           cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="/arch:AVX2" -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES=OFF -DFEATURE_egl=ON -DFEATURE_opengl=ON -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
           cmake --build build
           cmake --install build --prefix ${{ github.workspace }}/qt6
