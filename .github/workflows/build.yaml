@@ -41,14 +41,13 @@ jobs:
           git clone https://invent.kde.org/dkazakov/qt5 -b kazakov/for-krita/6.8.0 qt5
           cd qt5
           
-      - name: Remove MSVC-incompatible `#warning`
+      - name: Strip MSVC-incompatible #warning
         shell: bash
         run: |
-          cd qt5
-          patch -p0 << 'EOF'
-          sed -i 's@^#\s*warning "Building QWindowsEGLStaticContext without ANGLE is not officially supported"@    /* warning removed: MSVC does not support this directive */@' \
-           qtbase/src/plugins/platforms/windows/qwindowseglcontext.cpp
-
+          # Replace the single offending line with a harmless comment
+          sed -i 's@^[[:space:]]*#\s*warning.*QWindowsEGLStaticContext.*@    /* warning removed: MSVC does not support this directive */@' \
+              qt5/qtbase/src/plugins/platforms/windows/qwindowseglcontext.cpp
+              
       - name: Install Qt
         run: |
           cd qt5
