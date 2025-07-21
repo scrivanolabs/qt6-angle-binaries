@@ -37,7 +37,7 @@ jobs:
       - name: Install EGL from vcpkg
         shell: cmd
         run: |
-          vcpkg\vcpkg.exe install egl:x64-windows --overlay-ports=$${ github.workspace }}/vcpkg-overlays
+          vcpkg\vcpkg.exe install egl:x64-windows --overlay-ports=${ github.workspace }}/vcpkg-overlays
 
       - name: Clone Qt 6-for-Angle branch
         run: |
