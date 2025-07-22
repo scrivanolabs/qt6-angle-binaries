@@ -41,11 +41,6 @@ vcpkg_from_github(
     REPO google/angle
     REF ${ANGLE_COMMIT}
     SHA512 ${ANGLE_SHA512}
-    # On update check headers against opengl-registry
-    PATCHES
-        001-fix-uwp.patch
-        002-fix-builder-error.patch
-        003-fix-mingw.patch
 )
 
 # Generate angle_commit.h
